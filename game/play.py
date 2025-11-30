@@ -1,8 +1,6 @@
-# python
 import sys
-import pygame
 from classes import *
-from setup import Game
+from setup_game import Game
 from config import *
 
 
@@ -74,7 +72,3 @@ def play():
                 sys.exit()
 
         pygame.display.flip()
-
-
-if __name__ == "__main__":
-    play()

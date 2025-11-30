@@ -16,7 +16,7 @@ class Game:
 
         pygame.init()
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
-        pygame.display.set_caption("Tiny Space Invaders")
+        pygame.display.set_caption("Tiny Vir Christmas Invaders")
         self.clock = pygame.time.Clock()
         self.font = pygame.font.SysFont(None, 36)
         self.reset()
