@@ -3,6 +3,7 @@ import pygame
 from .classes import Player, Enemy, Bullet
 from .config import *
 import os
+import random
 
 
 class Game:
@@ -23,6 +24,8 @@ class Game:
 
         self.player_img = None
         self.enemy_img = None
+        self.enemy_imgs = []
+        self.bg_img = None
         self.bullet_img = None
         self.load_assets()
         self.reset()
@@ -32,24 +35,71 @@ class Game:
         try:
             base = os.path.join(os.path.dirname(__file__), "assets")
             print("base:", base)
+            # discover all png assets in the assets/ folder
             player_png = os.path.join(base, "grinch_1709x2000.png")
-            enemy_png = os.path.join(base, "present_512x512.png")
-            bullet_png = os.path.join(base, "tree_480x480.png")
+            bullet_png = os.path.join(base, "present_512x512.png")
+            bg_png = os.path.join(base, "background.png")
+
+            # Load player image if present
             if os.path.exists(player_png):
                 self.player_img = pygame.image.load(player_png).convert_alpha()
                 self.player_img = pygame.transform.scale(self.player_img, (50, 50))
-            if os.path.exists(enemy_png):
-                self.enemy_img = pygame.image.load(enemy_png).convert_alpha()
-                self.enemy_img = pygame.transform.scale(self.enemy_img, (40, 50))
+
+            # Load bullet image if present
             if os.path.exists(bullet_png):
                 self.bullet_img = pygame.image.load(bullet_png).convert_alpha()
                 self.bullet_img = pygame.transform.scale(self.bullet_img, (16, 16))
+
+            # Load background image if present (prefer explicit names)
+            chosen_bg = None
+            if os.path.exists(bg_png):
+                chosen_bg = bg_png
+            if chosen_bg:
+                try:
+                    bg = pygame.image.load(chosen_bg).convert()
+                    # scale background to screen size
+                    bg = pygame.transform.scale(bg, (WIDTH, HEIGHT))
+                    self.bg_img = bg
+                except Exception:
+                    self.bg_img = None
+
+            # Any other pngs in the assets folder are treated as enemy sprites
+            for fname in os.listdir(base):
+                if not fname.lower().endswith('.png'):
+                    continue
+                fpath = os.path.join(base, fname)
+                # skip the known player/bullet/background/win files already handled
+                try:
+                    if os.path.exists(player_png) and os.path.samefile(fpath, player_png):
+                        continue
+                    if os.path.exists(bullet_png) and os.path.samefile(fpath, bullet_png):
+                        continue
+                    if os.path.exists(bg_png) and os.path.samefile(fpath, bg_png):
+                        continue
+                except Exception:
+                    # os.path.samefile can fail on some platforms; ignore and continue
+                    pass
+                try:
+                    surf = pygame.image.load(fpath).convert_alpha()
+                    surf = pygame.transform.scale(surf, (40, 50))
+                    self.enemy_imgs.append(surf)
+                except Exception:
+                    # ignore files that fail to load as images
+                    continue
+            # Fallback: if no detected enemy images, try the old explicit child file
+            if not self.enemy_imgs:
+                enemy_png = os.path.join(base, "child4_.png")
+                if os.path.exists(enemy_png):
+                    self.enemy_img = pygame.image.load(enemy_png).convert_alpha()
+                    self.enemy_img = pygame.transform.scale(self.enemy_img, (40, 50))
         except Exception as e:
             # If loading fails, keep images None -> shapes will be used
             print("Error loading assets:", e)
             self.player_img = None
             self.enemy_img = None
             self.bullet_img = None
+            self.bg_img = None
+            self.win_img = None
 
     def reset(self):
         self.player = Player(self.player_img)
@@ -60,7 +110,14 @@ class Game:
             for col in range(COLS):
                 x = self.start_x + col * ENEMY_PADDING
                 y = 50 + row * 50
-                self.enemies.append(Enemy(x, y, self.enemy_img))
+                # pick a random enemy image if available, otherwise fallback
+                if self.enemy_imgs:
+                    img = random.choice(self.enemy_imgs)
+                elif self.enemy_img:
+                    img = self.enemy_img
+                else:
+                    img = None
+                self.enemies.append(Enemy(x, y, img))
         self.enemy_dx = ENEMY_SPEED_X
         self.score = 0
         self.game_over = False

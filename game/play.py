@@ -53,7 +53,11 @@ def play():
         if not game.enemies:
             game.game_over = True
 
-        game.screen.fill((10, 10, 30))
+        # draw background if available, otherwise clear to a solid color
+        if getattr(game, 'bg_img', None):
+            game.screen.blit(game.bg_img, (0, 0))
+        else:
+            game.screen.fill((10, 10, 30))
         game.player.draw(game.screen)
         for b in game.bullets:
             b.draw(game.screen)
