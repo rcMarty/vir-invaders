@@ -1,5 +1,5 @@
 # Student Research Project — Space Invaders + Research Components
-Speedrun project from five students combining a Pygame Space Invaders game with experimental ransomware research code.
+School project for university security classes by five students: a speedrun combining a Pygame Space Invaders game with experimental ransomware research code (for study only).
 
 ## Overview
 This repository contains a simple Pygame-based Space Invaders student project alongside experimental ransomware research code related to file analysis and an offline LLM integration. 
