@@ -20,8 +20,8 @@ def play():
             if keys[pygame.K_RIGHT]:
                 game.player.move(PLAYER_SPEED)
             if keys[pygame.K_SPACE]:
-                if not game.bullets or game.bullets[-1].y < game.player.rect.top - 50:
-                    game.bullets.append(Bullet(game.player.rect.centerx, game.player.rect.top))
+                if not game.bullets or game.bullets[-1].y < game.player.rect.top - BULLET_TIMEOUT:
+                    game.player_shoot()
 
         for b in game.bullets:
             b.update()
@@ -29,26 +29,26 @@ def play():
 
         if not game.game_over:
             edge_hit = False
-            for e in game.enemies:
-                e.rect.x += game.enemy_dx
-                if e.rect.right >= WIDTH or e.rect.left <= 0:
+            for enemy in game.enemies:
+                enemy.rect.x += game.enemy_dx
+                if enemy.rect.right >= WIDTH or enemy.rect.left <= 0:
                     edge_hit = True
             if edge_hit:
                 game.enemy_dx = -game.enemy_dx
-                for e in game.enemies:
-                    e.rect.y += ENEMY_DROP
+                for enemy in game.enemies:
+                    enemy.rect.y += ENEMY_DROP
 
         for b in game.bullets:
-            for e in game.enemies:
-                if e.alive and b.alive and e.rect.collidepoint(b.x, b.y):
-                    e.alive = False
+            for enemy in game.enemies:
+                if enemy.alive and b.alive and enemy.rect.collidepoint(b.x, b.y):
+                    enemy.alive = False
                     b.alive = False
                     game.score += 10
 
         game.enemies = [e for e in game.enemies if e.alive]
 
-        for e in game.enemies:
-            if e.rect.bottom >= game.player.rect.top:
+        for enemy in game.enemies:
+            if enemy.rect.bottom >= game.player.rect.top:
                 game.game_over = True
         if not game.enemies:
             game.game_over = True
@@ -57,8 +57,8 @@ def play():
         game.player.draw(game.screen)
         for b in game.bullets:
             b.draw(game.screen)
-        for e in game.enemies:
-            e.draw(game.screen)
+        for enemy in game.enemies:
+            enemy.draw(game.screen)
 
         game.draw_text(f"Score: {game.score}", 10, 10)
         if game.game_over:
