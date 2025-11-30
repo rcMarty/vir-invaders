@@ -1,7 +1,7 @@
 import sys
-from classes import *
-from setup_game import Game
-from config import *
+from .classes import *
+from .setup_game import Game
+from .config import *
 
 
 def play():

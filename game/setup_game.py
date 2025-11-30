@@ -1,7 +1,7 @@
 # python
 import pygame
-from classes import Player, Enemy, Bullet
-from config import *
+from .classes import Player, Enemy, Bullet
+from .config import *
 import os
 
 
