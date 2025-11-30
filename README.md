@@ -7,7 +7,6 @@ This repository contains a simple Pygame-based Space Invaders student project al
 - The repository includes a folder `malware/` with experimental code that demonstrates concepts related to file analysis and encryption.  
 - **Do not run any code in `malware/` on your primary machine or on a production network.**  
 - If you want to inspect or test those components, use an isolated virtual machine or container with no network connectivity and proper backups.
-- The author is responsible for following legal and ethical guidelines when using or testing the research components.
 
 ## Project Structure
 - `main.py` — project entry point (runs the safe game part).
@@ -19,7 +18,7 @@ This repository contains a simple Pygame-based Space Invaders student project al
 ## Requirements
 - Python 3.11+ recommended.
 - For the game: `pygame`.
-- For research components (optional, do not install unless you will run them in a safe environment): `openai` (or local LLM client), `pyserde`, `cryptography`, `requests`.
+- For research components (optional): `openai` (or local LLM client), `pyserde`, `cryptography`, `requests`.
 
 ## Install (safe steps for game)
 1. Create and activate a virtual environment:
@@ -35,8 +34,8 @@ This repository contains a simple Pygame-based Space Invaders student project al
 - If evaluating the LLM-based scanner, prefer reviewing the code statically or running tests inside a disposable VM without network access to external resources.
 
 ## Development / Building
-- A PyInstaller spec is provided as `space_invaders.spec`. It currently includes `game/` and `malware/` in `datas`. Remove `malware/` from `datas` and `hiddenimports` before building a public executable.
-- To build a safe game-only executable, edit `space_invaders.spec` and exclude `malware` entries.
+- A PyInstaller spec is provided as `space_invaders.spec`. It currently includes `game/` and `malware/` in `datas`.
+- To build a safe game-only executable, refer to [./game/readme.md](./game/readme.md).
 
 ## Research Notes
 - This is a student research repository. Any experiments involving encryption, data exfiltration, or automated file analysis were created for study — they may be incomplete and are provided without warranty.
