@@ -1,93 +1,80 @@
 # python
 import sys
+import pygame
 from classes import *
+from setup import Game
+from config import *
 
-# --- Config ---
+
+def play():
+    game = Game()
+    while True:
+        dt = game.clock.tick(FPS)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        keys = pygame.key.get_pressed()
+        if not game.game_over:
+            if keys[pygame.K_LEFT]:
+                game.player.move(-PLAYER_SPEED)
+            if keys[pygame.K_RIGHT]:
+                game.player.move(PLAYER_SPEED)
+            if keys[pygame.K_SPACE]:
+                if not game.bullets or game.bullets[-1].y < game.player.rect.top - 50:
+                    game.bullets.append(Bullet(game.player.rect.centerx, game.player.rect.top))
+
+        for b in game.bullets:
+            b.update()
+        game.bullets = [b for b in game.bullets if b.alive]
+
+        if not game.game_over:
+            edge_hit = False
+            for e in game.enemies:
+                e.rect.x += game.enemy_dx
+                if e.rect.right >= WIDTH or e.rect.left <= 0:
+                    edge_hit = True
+            if edge_hit:
+                game.enemy_dx = -game.enemy_dx
+                for e in game.enemies:
+                    e.rect.y += ENEMY_DROP
+
+        for b in game.bullets:
+            for e in game.enemies:
+                if e.alive and b.alive and e.rect.collidepoint(b.x, b.y):
+                    e.alive = False
+                    b.alive = False
+                    game.score += 10
+
+        game.enemies = [e for e in game.enemies if e.alive]
+
+        for e in game.enemies:
+            if e.rect.bottom >= game.player.rect.top:
+                game.game_over = True
+        if not game.enemies:
+            game.game_over = True
+
+        game.screen.fill((10, 10, 30))
+        game.player.draw(game.screen)
+        for b in game.bullets:
+            b.draw(game.screen)
+        for e in game.enemies:
+            e.draw(game.screen)
+
+        game.draw_text(f"Score: {game.score}", 10, 10)
+        if game.game_over:
+            msg = "You Win!" if not game.enemies else "Game Over"
+            game.draw_text(msg, WIDTH // 2 - 80, HEIGHT // 2 - 20, (255, 255, 0))
+            game.draw_text("Press R to restart or Esc to quit", WIDTH // 2 - 200, HEIGHT // 2 + 20, (180, 180, 180))
+            if keys[pygame.K_r]:
+                game.reset()
+            if keys[pygame.K_ESCAPE]:
+                pygame.quit()
+                sys.exit()
+
+        pygame.display.flip()
 
 
-pygame.init()
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Tiny Space Invaders")
-clock = pygame.time.Clock()
-font = pygame.font.SysFont(None, 36)
-
-# --- Setup game objects ---
-player = Player()
-bullets = []
-enemies = []
-start_x = (WIDTH - (COLS - 1) * ENEMY_PADDING) // 2
-for row in range(ROWS):
-    for col in range(COLS):
-        x = start_x + col * ENEMY_PADDING
-        y = 50 + row * 50
-        enemies.append(Enemy(x, y))
-
-enemy_dx = ENEMY_SPEED_X
-score = 0
-game_over = False
-
-# --- Helper ---
-def draw_text(surf, text, x, y, color=(255,255,255)):
-    img = font.render(text, True, color)
-    surf.blit(img, (x, y))
-
-# --- Main loop ---
-while True:
-    dt = clock.tick(FPS)
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
-
-    keys = pygame.key.get_pressed()
-    if not game_over:
-        if keys[pygame.K_LEFT]:
-            player.move(-PLAYER_SPEED)
-        if keys[pygame.K_RIGHT]:
-            player.move(PLAYER_SPEED)
-        if keys[pygame.K_SPACE]:
-            # simple cooldown: only one bullet at a time
-            if not bullets or bullets[-1].y < player.y - 50:
-                bullets.append(Bullet(player.rect.centerx, player.rect.top))
-
-    # update bullets
-    for b in bullets:
-        b.update()
-    bullets = [b for b in bullets if b.alive]
-
-    # update enemies
-    if not game_over:
-        edge_hit = False
-        for e in enemies:
-            e.rect.x += enemy_dx
-            if e.rect.right >= WIDTH or e.rect.left <= 0:
-                edge_hit = True
-        if edge_hit:
-            enemy_dx = -enemy_dx
-            for e in enemies:
-                e.rect.y += ENEMY_DROP
-
-    # collisions
-    for b in bullets:
-        for e in enemies:
-            if e.alive and b.alive and e.rect.collidepoint(b.x, b.y):
-                e.alive = False
-                b.alive = False
-                score += 10
-
-    enemies = [e for e in enemies if e.alive]
-
-    # check lose/win
-    for e in enemies:
-        if e.rect.bottom >= player.rect.top:
-            game_over = True
-    if not enemies:
-        game_over = True
-
-    # draw
-    screen.fill((10, 10, 30))
-    player.draw(screen)
-    for b in bullets:
-        b.draw(screen)
-    for e in enemies:
-        e.draw(screen)
+if __name__ == "__main__":
+    play()

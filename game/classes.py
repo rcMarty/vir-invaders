@@ -1,5 +1,5 @@
 # --- Entities ---
-from config import *
+from config import WIDTH, HEIGHT, BULLET_SPEED
 import pygame
 
 class Player:
