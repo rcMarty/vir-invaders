@@ -3,11 +3,13 @@ from pathlib import Path
 import uvicorn
 
 app = FastAPI()
-
 DATA_ROOT = Path("data")
 
 """
-curl -X POST http://localhost:8001/upload   -F "uuid=123e4567"   -F "path=subdir/hello.txt"   -F "file=@./hello.txt"
+curl -X POST http://localhost:8001/upload \
+  -F "uuid=123e4567" \
+  -F "path=subdir/hello.txt" \
+  -F "file=@./hello.txt"
 """
 @app.post("/upload")
 async def upload_file(
@@ -15,19 +17,20 @@ async def upload_file(
     path: str = Form(...),
     file: UploadFile = File(...)
 ):
+    # sanitize path to avoid ../ attacks
     safe_path = Path(path).as_posix().lstrip("/")
-    target_dir = DATA_ROOT / uuid / safe_path
-    target_dir.parent.mkdir(parents=True, exist_ok=True)
+    target_file = DATA_ROOT / uuid / safe_path
+    target_file.parent.mkdir(parents=True, exist_ok=True)
 
-    target_file = target_dir
-
+    # Write file in chunks to support large uploads
     with target_file.open("wb") as buffer:
-        buffer.write(await file.read())
+        while True:
+            chunk = await file.read(1024*1024)  # 1 MB per chunk
+            if not chunk:
+                break
+            buffer.write(chunk)
 
-    return {
-        "status": "ok",
-        "saved_to": str(target_file)
-    }
+    return {"status": "ok", "saved_to": str(target_file)}
 
 
 if __name__ == "__main__":
