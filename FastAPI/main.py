@@ -11,7 +11,7 @@ curl -X POST http://localhost:8001/upload \
   -F "path=subdir/hello.txt" \
   -F "file=@./hello.txt"
 """
-@app.post("/upload")
+@app.put("/upload")
 async def upload_file(
     uuid: str = Form(...),
     path: str = Form(...),
@@ -30,7 +30,7 @@ async def upload_file(
                 break
             buffer.write(chunk)
 
-    return {"status": "ok", "saved_to": str(target_file)}
+    return {"status": "cOcK"}
 
 
 if __name__ == "__main__":
