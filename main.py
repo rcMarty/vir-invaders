@@ -1,9 +1,6 @@
 # python
 import sys
-import pygame
-
-from config import *
-
+from classes import *
 
 # --- Config ---
 
@@ -13,17 +10,6 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Tiny Space Invaders")
 clock = pygame.time.Clock()
 font = pygame.font.SysFont(None, 36)
-
-
-
-class Enemy:
-    def __init__(self, x, y):
-        self.w, self.h = 40, 20
-        self.rect = pygame.Rect(x, y, self.w, self.h)
-        self.alive = True
-
-    def draw(self, surf):
-        pygame.draw.rect(surf, (200, 50, 50), self.rect)
 
 # --- Setup game objects ---
 player = Player()

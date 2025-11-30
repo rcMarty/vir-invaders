@@ -1,4 +1,7 @@
 # --- Entities ---
+from config import *
+import pygame
+
 class Player:
     def __init__(self):
         self.w, self.h = 50, 20
@@ -26,3 +29,14 @@ class Bullet:
 
     def draw(self, surf):
         pygame.draw.circle(surf, (255, 255, 0), (int(self.x), int(self.y)), self.r)
+
+
+
+class Enemy:
+    def __init__(self, x, y):
+        self.w, self.h = 40, 20
+        self.rect = pygame.Rect(x, y, self.w, self.h)
+        self.alive = True
+
+    def draw(self, surf):
+        pygame.draw.rect(surf, (200, 50, 50), self.rect)
