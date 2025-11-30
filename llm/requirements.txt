@@ -1,3 +1,0 @@
-openai>=1.14.0
-pyserde>=0.16.3
-typing-extensions>=4.11.0

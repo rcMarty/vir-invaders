@@ -1,9 +1,0 @@
-# packager dependencies for building the game executable
-altgraph==0.17.5
-packaging==25.0
-pyinstaller==6.17.0
-pyinstaller-hooks-contrib==2025.10
-setuptools==80.9.0
-
-# runtime dependencies for the game
-pygame==2.6.1
