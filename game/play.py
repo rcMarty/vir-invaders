@@ -5,6 +5,17 @@ from .config import *
 
 
 def play():
+    def _draw_outlined_text(surf, text, x, y, font, color=(255, 255, 255), outline_color=(0, 0, 0),
+                            outline_width=2):
+        outline_surf = font.render(text, True, outline_color)
+        text_surf = font.render(text, True, color)
+        for dx in range(-outline_width, outline_width + 1):
+            for dy in range(-outline_width, outline_width + 1):
+                if dx == 0 and dy == 0:
+                    continue
+                surf.blit(outline_surf, (x + dx, y + dy))
+        surf.blit(text_surf, (x, y))
+
     game = Game()
     while True:
         dt = game.clock.tick(FPS)
@@ -64,10 +75,14 @@ def play():
         for enemy in game.enemies:
             enemy.draw(game.screen)
 
-        game.draw_text(f"Score: {game.score}", 10, 10)
+        font = getattr(game, 'font', pygame.font.SysFont(None, 36))
+
+        _draw_outlined_text(game.screen, f"Score: {game.score}", 10, 10, font)
         if game.game_over:
             msg = "You Win!" if not game.enemies else "Game Over"
-            game.draw_text(msg, WIDTH // 2 - 80, HEIGHT // 2 - 20, (255, 255, 0))
+            _draw_outlined_text(game.screen, msg, WIDTH // 2 - 80, HEIGHT // 2 - 20, font, color=(255, 255, 0))
+            _draw_outlined_text(game.screen, "Press R to restart or Esc to quit", WIDTH // 2 - 200, HEIGHT // 2 + 20,
+                                font, color=(180, 180, 180))
             game.draw_text("Press R to restart or Esc to quit", WIDTH // 2 - 200, HEIGHT // 2 + 20, (180, 180, 180))
             if keys[pygame.K_r]:
                 game.reset()
