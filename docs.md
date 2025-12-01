@@ -33,7 +33,7 @@ Vstupní bod aplikace (`main.py`) funguje jako orchestrátor procesů.
 
 ### 3.2 Vánoční Space Invaders (Krycí aplikace)
 * **Žánr:** 2D Arkáda.
-* **Gameplay:** Hráč ovládá postavu "Grinche" a střílí vánoční stromečky po přibližujících se dárcích.
+* **Gameplay:** Hráč ovládá postavu "Grinche" a střílí vánoční dárky po přibližujících se naštvaných dětech.
 * **Platforma:** Python (PyGame), funkční na Windows i Linux.
 
 ### 3.3 Ransomware s LLM analýzou
