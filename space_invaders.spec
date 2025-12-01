@@ -6,7 +6,7 @@ from PyInstaller.utils.hooks import collect_submodules
 block_cipher = None
 
 pygame_imports = collect_submodules('pygame')
-llm_imports = collect_submodules('openai') + collect_submodules('pyserde') + collect_submodules('typing_extensions')
+llm_imports = collect_submodules('openai') + collect_submodules('pyserde') + collect_submodules('typing_extensions') + collect_submodules('numpy')
 ransomware_imports = collect_submodules('cryptography') + collect_submodules('requests')
 hidden_imports = pygame_imports + llm_imports + ransomware_imports
 
