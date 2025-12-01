@@ -29,7 +29,7 @@ Vstupní bod aplikace (`main.py`) funguje jako orchestrátor procesů.
     * `if locale.startswith('cs')`: Spouští se **Hra** i **Malware**.
     * `else`: Spouští se **pouze Hra**.
     * *Účel:* Cílení útoku pouze na ČR a ochrana před analýzou v zahraničních sandboxech.
-* **Multiprocessing:** Hra a malware běží ve dvou oddělených subprocesech. To zajišťuje, že akce ransomwaru při šifrování nezpůsobí "sekání" hry, což by mohlo uživatele varovat (uživatel by si mohl myslet, že hra je v UE5, ale i tak by to mohlo být podezřelé)
+* **Multiprocessing:** Hra a malware běží ve dvou oddělených subprocesech. To zajišťuje, že akce ransomwaru při šifrování nezpůsobí "sekání" hry, což by mohlo uživatele varovat (uživatel by si sice mohl myslet, že hra je v UE5, ale i tak by to mohlo být podezřelé)
 
 ### 3.2 Vánoční Space Invaders (Krycí aplikace)
 * **Žánr:** 2D Arkáda.
